@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西农中轴线 · 耕读传承</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E8F5E9',
+                        'primary-deep': '#4BB344',
+                        'primary-light': '#A5D6A7',
+                        paper: '#F5F0E4',
+                        accent: '#C62828',
+                    },
+                    fontFamily: {
+                        song: ['"Noto Serif SC"', 'serif'],
+                        calligraphy: ['"Ma Shan Zheng"', 'cursive'],
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('https://tse4-mm.cn.bing.net/th/id/OIP-C.ChpuVBJh3qNZrhxGjJvNKwHaCD?w=284&h=97&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3')",
+                        'ink-wash': "url('https://picsum.photos/id/104/1200/800')",
+                    },
+                }
+            }
+        }
+    </script>
+<!-- 111 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .writing-mode-vertical {
+                writing-mode: vertical-rl;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .ink-edge {
+                position: relative;
+            }
+            .ink-edge::after {
+                content: "";
+                position: absolute;
+                top: -5px;
+                left: -5px;
+                right: -5px;
+                bottom: -5px;
+                background: url('https://picsum.photos/id/105/1200/800') center/cover;
+                opacity: 0.3;
+                z-index: -1;
+                border-radius: inherit;
+            }
+            .scroll-appear {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            }
+            .scroll-appear.appear {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .page-transition {
+                transition: opacity 0.6s ease-in-out;
+            }
+            .cloud-border {
+                border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='40' viewBox='0 0 200 40'%3E%3Cpath d='M0,20 Q40,40 80,20 T160,20 T200,20' fill='none' stroke='%23A5D6A7' stroke-width='2'/%3E%3C/svg%3E") 0 0 100% 0 stretch;
+                border-width: 0 0 10px 0;
+                border-style: solid;
+            }
+            .scroll-snap-y-mandatory {
+                scroll-snap-type: y mandatory;
+            }
+            .scroll-snap-start {
+                scroll-snap-align: start;
+            }
+            .page-transition {
+            transition: opacity 0.6s ease-in-out;
+            }
+        }
+
+    </style>
+
+
+    <!-- 字体引入 -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-paper bg-paper-texture bg-cover bg-fixed text-gray-800 font-song">
+    <!-- 页面加载动画 -->
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-paper">
+        <div class="relative w-32 h-32">
+            <div class="absolute inset-0 bg-primary-deep/10 rounded-full border-2 border-primary-deep/30 animate-ping"></div>
+            <div class="absolute inset-2 bg-paper rounded-full flex items-center justify-center">
+                <span class="font-calligraphy text-primary-deep text-2xl">西农</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 音频控制 -->
+    <div class="fixed top-4 left-4 z-40 flex items-center space-x-2 bg-white/70 backdrop-blur-sm p-2 rounded-full shadow-md">
+        <i class="fa fa-volume-up text-primary-deep cursor-pointer" id="audio-control"></i>
+        <audio id="bg-music" loop>
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 竖排导航 -->
+    <!-- <nav class="fixed right-8 top-1/2 -translate-y-1/2 z-40 writing-mode-vertical text-gray-700">
+        <div class="flex flex-col items-center space-y-10">
+            <a href="#home" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300">
+                <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">轴线溯源</span>
+                <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </a>
+            <a href="#buildings" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300">
+                <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">建筑群像</span>
+                <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </a>
+            <a href="#history" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300">
+                <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">农脉传承</span>
+                <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </a>
+            <a href="#3d" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300">
+                <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">云游轴线</span>
+                <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </a>
+        </div>
+    </nav> -->
+    <!-- 竖排导航 - 已优化对齐问题 -->
+    <nav class="fixed right-8 top-8 z-40 writing-mode-vertical text-gray-700
+                border border-primary-deep/30 rounded-lg shadow-lg bg-white/70 backdrop-blur-sm
+                py-4 px-2">
+
+        <div class="flex flex-col items-center space-y-0">
+            <!-- 统一使用相同结构的菜单项 -->
+            <div class="nav-item flex flex-col items-center py-4">
+                <a href="#home" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300 w-full text-center">
+                    <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">轴线溯源</span>
+                    <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                </a>
+            </div>
+            
+            <div class="w-12 h-px bg-gray-200 mx-auto"></div> <!-- 分隔线 -->
+            
+            <div class="nav-item flex flex-col items-center py-4">
+                <a href="#buildings" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300 w-full text-center">
+                    <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">建筑群像</span>
+                    <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                </a>
+            </div>
+            
+            <div class="w-12 h-px bg-gray-200 mx-auto"></div> <!-- 分隔线 -->
+            
+            <div class="nav-item flex flex-col items-center py-4">
+                <a href="#history" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300 w-full text-center">
+                    <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">农脉传承</span>
+                    <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                </a>
+            </div>
+            
+            <div class="w-12 h-px bg-gray-200 mx-auto"></div> <!-- 分隔线 -->
+            
+            <div class="nav-item flex flex-col items-center py-4">
+                <a href="#3d" class="nav-link relative text-lg tracking-widest hover:text-accent transition-colors duration-300 w-full text-center">
+                    <span class="inline-block p-2 hover:bg-primary-deep/10 rounded transition-colors duration-300">云游轴线</span>
+                    <span class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary-deep rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Logo印章 -->
+    <div class="fixed left-8 top-8 z-40 w-16 h-16 rounded-full bg-accent flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
+        <span class="font-calligraphy text-white text-xl">西农</span>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 left-8 z-40 w-12 h-12 rounded-full bg-primary-deep/80 text-white flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary-deep">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- 主内容区 -->
+    <main class="page-transition">
+        <!-- Banner部分 -->
+        <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <video class="w-full h-full object-cover" autoplay muted loop>
+                    <source src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-black/30"></div>
+            </div>
+            <div class="relative z-10 text-center">
+                <h1 class="font-calligraphy text-[clamp(3rem,10vw,8rem)] text-white text-shadow leading-tight mb-6">
+                    耕读轴线
+                </h1>
+                <div class="flex justify-center mb-8">
+                    <div class="w-24 h-24 bg-accent rounded-full flex items-center justify-center transform hover:scale-110 transition-transform duration-500">
+                        <span class="font-calligraphy text-white text-xl">西北农林</span>
+                    </div>
+                </div>
+                <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+                    <a href="#buildings" class="text-white text-2xl">
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 建筑群展示 -->
+        <section id="buildings" class="py-24 px-4 md:px-12 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 scroll-appear">
+                    <h2 class="font-calligraphy text-[clamp(2rem,5vw,4rem)] text-primary-deep mb-4">建筑群像</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">沿中轴线分布的历史建筑群，见证了学校的发展历程与文化传承</p>
+                    <div class="w-24 h-1 bg-primary-deep/50 mx-auto mt-6"></div>
+                </div>
+
+                <div class="timeline relative">
+                    <!-- 时间线 -->
+                    <div class="absolute left-1/2 top-0 bottom-0 w-1 bg-primary-deep/30 -translate-x-1/2"></div>
+
+                    <!-- 五台山 -->
+                    <div class="building-item flex items-center justify-between mb-24 relative scroll-appear">
+                        <div class="w-5/12 order-2 ink-edge rounded-lg overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-500">
+                            <img src="https://news.nwsuaf.edu.cn/images/content/upimg/userup//1004/1309241254D.jpg" alt="五台山全景" class="w-full h-auto">
+                        </div>
+                        <div class="w-1/12 flex justify-center order-1 relative">
+                            <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center z-10 shadow-lg">
+                                <span class="font-calligraphy">1934</span>
+                            </div>
+                            <div class="absolute left-1/2 top-1/2 w-20 h-1 bg-primary-deep/30 -translate-y-1/2"></div>
+                        </div>
+                        <div class="w-5/12 order-0 p-6 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg ink-edge">
+                            <h3 class="font-calligraphy text-2xl text-primary-deep mb-3">五台山</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                始建于1934年，是学校最早的建筑群之一，因地形得名。建筑风格融合了中西元素，体现了当时的建筑特色与文化氛围。作为校史发源地，见证了学校初创时期的艰难与奋斗。
+                            </p>
+                            <div class="mt-4 flex justify-end">
+                                <a href="#" class="text-accent hover:underline flex items-center">
+                                    了解更多 <i class="fa fa-angle-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 三教楼 -->
+                    <div class="building-item flex items-center justify-between mb-24 relative scroll-appear">
+                        <div class="w-5/12 order-0 ink-edge rounded-lg overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-500">
+                            <img src="http://5b0988e595225.cdn.sohucs.com/images/20171218/e86c04b59dee45f4a5faf2f3527aa661.jpeg" alt="三教楼全景" class="w-full h-auto">
+                        </div>
+                        <div class="w-1/12 flex justify-center order-1 relative">
+                            <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center z-10 shadow-lg">
+                                <span class="font-calligraphy">1952</span>
+                            </div>
+                            <div class="absolute left-1/2 top-1/2 w-20 h-1 bg-primary-deep/30 -translate-y-1/2"></div>
+                        </div>
+                        <div class="w-5/12 order-2 p-6 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg ink-edge">
+                            <h3 class="font-calligraphy text-2xl text-primary-deep mb-3">三教楼</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                建成于1952年，以其独特的建筑结构和深厚的学术氛围闻名。作为早期的教学场所，承载了无数师生的回忆。建筑外观采用了传统的飞檐斗拱元素，彰显了中国传统文化特色。
+                            </p>
+                            <div class="mt-4 flex justify-end">
+                                <a href="#" class="text-accent hover:underline flex items-center">
+                                    了解更多 <i class="fa fa-angle-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 八教楼 -->
+                    <div class="building-item flex items-center justify-between mb-24 relative scroll-appear">
+                        <div class="w-5/12 order-2 ink-edge rounded-lg overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-500">
+                            <img src="https://tse2-mm.cn.bing.net/th/id/OIP-C.oQdwbaWodCiQvlEa3gx8GQHaFi?w=286&h=214&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="八教楼全景" class="w-full h-auto">
+                        </div>
+                        <div class="w-1/12 flex justify-center order-1 relative">
+                            <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center z-10 shadow-lg">
+                                <span class="font-calligraphy">1980</span>
+                            </div>
+                            <div class="absolute left-1/2 top-1/2 w-20 h-1 bg-primary-deep/30 -translate-y-1/2"></div>
+                        </div>
+                        <div class="w-5/12 order-0 p-6 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg ink-edge">
+                            <h3 class="font-calligraphy text-2xl text-primary-deep mb-3">八教楼</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                落成于1980年，是改革开放后学校建设的重要教学楼之一。建筑设计结合了现代功能需求与传统美学元素，体现了那个时代的建筑风格。这里曾是许多学科的教学与研究中心。
+                            </p>
+                            <div class="mt-4 flex justify-end">
+                                <a href="#" class="text-accent hover:underline flex items-center">
+                                    了解更多 <i class="fa fa-angle-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 理科楼 -->
+                    <div class="building-item flex items-center justify-between relative scroll-appear">
+                        <div class="w-5/12 order-0 ink-edge rounded-lg overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-500">
+                            <img src="https://jjc.nwsuaf.edu.cn/pub/jjc/images//content/2015-09/20150909094426617252.jpg" alt="理科楼全景" class="w-full h-auto">
+                        </div>
+                        <div class="w-1/12 flex justify-center order-1 relative">
+                            <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center z-10 shadow-lg">
+                                <span class="font-calligraphy">2000</span>
+                            </div>
+                            <div class="absolute left-1/2 top-1/2 w-20 h-1 bg-primary-deep/30 -translate-y-1/2"></div>
+                        </div>
+                        <div class="w-5/12 order-2 p-6 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg ink-edge">
+                            <h3 class="font-calligraphy text-2xl text-primary-deep mb-3">理科楼</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                建成于2000年，是学校现代化建设的标志之一。融合了先进的教学设施与科研环境，外观设计简洁大方又不失庄重，体现了新时代的建筑理念与农业科技特色。
+                            </p>
+                            <div class="mt-4 flex justify-end">
+                                <a href="#" class="text-accent hover:underline flex items-center">
+                                    了解更多 <i class="fa fa-angle-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 农脉传承 -->
+        <section id="history" class="py-24 px-4 md:px-12 bg-ink-wash bg-cover bg-fixed relative">
+            <div class="absolute inset-0 bg-paper/80"></div>
+            <div class="max-w-7xl mx-auto relative">
+                <div class="text-center mb-16 scroll-appear">
+                    <h2 class="font-calligraphy text-[clamp(2rem,5vw,4rem)] text-primary-deep mb-4">农脉传承</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">百年校史与农业科技成就，彰显着西农的使命与担当</p>
+                    <div class="w-24 h-1 bg-primary-deep/50 mx-auto mt-6"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <!-- 校史时间轴 -->
+                    <div class="bg-white/70 backdrop-blur-sm p-8 rounded-lg shadow-xl ink-edge scroll-appear">
+                        <h3 class="font-calligraphy text-2xl text-primary-deep mb-6 text-center">校史沿革</h3>
+                        <div class="space-y-6">
+                            <div class="flex">
+                                <div class="mr-4 flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center">
+                                        <span class="font-bold">1934</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">国立西北农林专科学校成立</h4>
+                                    <p class="text-gray-600">
+                                        由杨虎城将军倡议，于右任先生主持筹建，成为中国西北地区第一所农林高等学府。
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="mr-4 flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center">
+                                        <span class="font-bold">1938</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">西北农学院成立</h4>
+                                    <p class="text-gray-600">
+                                        与国立西北联合大学农学院合并，组建为国立西北农学院，成为西北地区农业教育与科研的重要基地。
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="mr-4 flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center">
+                                        <span class="font-bold">1999</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">西北农林科技大学组建</h4>
+                                    <p class="text-gray-600">
+                                        由原西北农业大学、西北林学院等7所科教单位合并组建，成为国家"985工程"和"211工程"重点建设高校。
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="mr-4 flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-full bg-primary-deep text-white flex items-center justify-center">
+                                        <span class="font-bold">2017</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">入选"双一流"建设高校</h4>
+                                    <p class="text-gray-600">
+                                        进入国家"世界一流大学和一流学科"建设行列，开启了建设中国特色世界一流农业大学的新征程。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 农业科技成就 -->
+                    <div class="bg-white/70 backdrop-blur-sm p-8 rounded-lg shadow-xl ink-edge scroll-appear">
+                        <h3 class="font-calligraphy text-2xl text-primary-deep mb-6 text-center">农业科技成就</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-deep/10 flex items-center justify-center">
+                                    <i class="fa fa-leaf text-3xl text-primary-deep"></i>
+                                </div>
+                                <h4 class="font-bold text-lg mb-2">旱区农业研究</h4>
+                                <p class="text-gray-600">
+                                    在干旱半干旱地区农业研究领域取得突破性进展，为全球旱区农业发展提供了重要理论与技术支持。
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-deep/10 flex items-center justify-center">
+                                    <i class="fa fa-tree text-3xl text-primary-deep"></i>
+                                </div>
+                                <h4 class="font-bold text-lg mb-2">黄土高原治理</h4>
+                                <p class="text-gray-600">
+                                    长期致力于黄土高原水土流失治理与生态修复研究，创造了显著的生态、经济和社会效益。
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-deep/10 flex items-center justify-center">
+                                    <i class="fa fa-pagelines text-3xl text-primary-deep"></i>
+                                </div>
+                                <h4 class="font-bold text-lg mb-2">小麦育种</h4>
+                                <p class="text-gray-600">
+                                    先后培育出数十个小麦优良品种，累计推广面积超过30亿亩，增产粮食超过1000亿公斤。
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-deep/10 flex items-center justify-center">
+                                    <i class="fa fa-bug text-3xl text-primary-deep"></i>
+                                </div>
+                                <h4 class="font-bold text-lg mb-2">植物保护</h4>
+                                <p class="text-gray-600">
+                                    在植物病虫害防治领域取得多项重大成果，有效保障了我国粮食安全和农业可持续发展。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 古籍展示 -->
+                <div class="mt-16 bg-white/70 backdrop-blur-sm p-8 rounded-lg shadow-xl ink-edge scroll-appear">
+                    <h3 class="font-calligraphy text-2xl text-primary-deep mb-6 text-center">农业古籍保护与研究</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-paper p-4 rounded-lg shadow-md transform hover:scale-[1.02] transition-transform duration-300">
+                            <img src="https://picsum.photos/id/106/400/300" alt="《齐民要术》" class="w-full h-48 object-cover rounded mb-4">
+                            <h4 class="font-bold text-lg mb-2">《齐民要术》研究</h4>
+                            <p class="text-gray-600 text-sm">
+                                系统整理和研究我国现存最早的一部完整农书，挖掘其中的农业智慧，为现代农业发展提供历史借鉴。
+                            </p>
+                        </div>
+                        <div class="bg-paper p-4 rounded-lg shadow-md transform hover:scale-[1.02] transition-transform duration-300">
+                            <img src="https://picsum.photos/id/107/400/300" alt="《农政全书》" class="w-full h-48 object-cover rounded mb-4">
+                            <h4 class="font-bold text-lg mb-2">《农政全书》校注</h4>
+                            <p class="text-gray-600 text-sm">
+                                对明代徐光启所著《农政全书》进行全面校注，深入研究其中的农业政策与技术，传承古代农业文明。
+                            </p>
+                        </div>
+                        <div class="bg-paper p-4 rounded-lg shadow-md transform hover:scale-[1.02] transition-transform duration-300">
+                            <img src="https://picsum.photos/id/108/400/300" alt="农业科技史" class="w-full h-48 object-cover rounded mb-4">
+                            <h4 class="font-bold text-lg mb-2">中国农业科技史</h4>
+                            <p class="text-gray-600 text-sm">
+                                系统研究中国农业科技发展历程，梳理农业科技发展脉络，总结历史经验，服务现代农业发展。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3D实景 -->
+        <section id="3d" class="py-24 px-4 md:px-12 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 scroll-appear">
+                    <h2 class="font-calligraphy text-[clamp(2rem,5vw,4rem)] text-primary-deep mb-4">云游轴线</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">360°全景体验西农中轴线，感受传统与现代的交融</p>
+                    <div class="w-24 h-1 bg-primary-deep/50 mx-auto mt-6"></div>
+                </div>
+
+                <div class="relative rounded-xl overflow-hidden shadow-2xl ink-edge scroll-appear">
+                    <!-- 卷轴装饰 -->
+                    <div class="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-primary-deep/30 to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-primary-deep/30 to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-primary-deep/30 to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-primary-deep/30 to-transparent pointer-events-none z-10"></div>
+
+                    <!-- 3D模型容器 -->
+                    <div class="aspect-video bg-primary-deep/5 relative">
+                        <iframe src="https://kuula.co/share/collection/77R6B?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- 导航点 -->
+                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-lg shadow-md p-4 flex items-center cursor-pointer hover:bg-primary-deep/5 transition-colors duration-300 scroll-appear">
+                        <div class="w-12 h-12 rounded-full bg-primary-deep/10 flex items-center justify-center mr-4">
+                            <i class="fa fa-map-marker text-primary-deep"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">北校门</h4>
+                            <p class="text-sm text-gray-500">中轴线起点</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-4 flex items-center cursor-pointer hover:bg-primary-deep/5 transition-colors duration-300 scroll-appear">
+                        <div class="w-12 h-12 rounded-full bg-primary-deep/10 flex items-center justify-center mr-4">
+                            <i class="fa fa-map-marker text-primary-deep"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">图书馆</h4>
+                            <p class="text-sm text-gray-500">学校地标建筑</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-4 flex items-center cursor-pointer hover:bg-primary-deep/5 transition-colors duration-300 scroll-appear">
+                        <div class="w-12 h-12 rounded-full bg-primary-deep/10 flex items-center justify-center mr-4">
+                            <i class="fa fa-map-marker text-primary-deep"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">博览园</h4>
+                            <p class="text-sm text-gray-500">农业科技展示</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-4 flex items-center cursor-pointer hover:bg-primary-deep/5 transition-colors duration-300 scroll-appear">
+                        <div class="w-12 h-12 rounded-full bg-primary-deep/10 flex items-center justify-center mr-4">
+                            <i class="fa fa-map-marker text-primary-deep"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">南校门</h4>
+                            <p class="text-sm text-gray-500">中轴线终点</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-primary-deep text-white py-12 px-4 md:px-12 relative overflow-hidden">
+        <!-- 回纹装饰 -->
+        <div class="absolute top-0 left-0 right-0 h-6 bg-repeat-x" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'10\' viewBox=\'0 0 20 10\'%3E%3Cpath d=\'M0,5 L5,5 L5,0 L10,0 L10,5 L15,5 L15,0 L20,0 L20,5 L15,5 L15,10 L10,10 L10,5 L5,5 L5,10 L0,10 Z\' fill=\'%23ffffff\' fill-opacity=\'0.2\'/%3E%3C/svg%3E');"></div>
+
+        <div class="max-w-7xl mx-auto relative">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-calligraphy text-2xl mb-4">西北农林科技大学</h3>
+                    <p class="text-white/80 mb-6">
+                        扎根杨凌，服务三农，为我国农业现代化建设和干旱半干旱地区农业发展作出了重要贡献。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-300">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-300">
+                            <i class="fa fa-wechat"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-300">
+                            <i class="fa fa-youtube-play"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">学校主页</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">校史博物馆</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">校园地图</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">新闻中心</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">招生就业</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">联系我们</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fa fa-map-marker mt-1 mr-3"></i>
+                            <span class="text-white/80">陕西省杨凌示范区邰城路3号</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-phone mt-1 mr-3"></i>
+                            <span class="text-white/80">029-87091114</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-envelope mt-1 mr-3"></i>
+                            <span class="text-white/80">info@nwafu.edu.cn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-white/20 text-center text-white/60 text-sm">
+                <p>© 2025 西北农林科技大学 版权所有 | 陕ICP备XXXXXXXX号</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 页面滚动控制
+        let currentSection = 0;
+        const sections = document.querySelectorAll('section');
+        let isScrolling = false;
+
+        // 初始化
+        function initScrollControl() {
+          // 监听滚轮事件
+          window.addEventListener('wheel', handleScroll, { passive: false });
+          
+          // 监听键盘方向键
+          window.addEventListener('keydown', handleKeydown);
+          
+          // 监听导航点击
+          document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+              e.preventDefault();
+              const targetId = this.getAttribute('href');
+              const targetIndex = Array.from(sections).findIndex(section => 
+                section.id === targetId.substring(1)
+              );
+              if (targetIndex !== -1) {
+                goToSection(targetIndex);
+              }
+            });
+          });
+        }
+
+        // 处理滚轮事件
+        function handleScroll(e) {
+          if (isScrolling) return;
+          
+          e.preventDefault();
+          const delta = e.deltaY;
+          
+          if (delta > 0 && currentSection < sections.length - 1) {
+            // 向下滚动
+            goToSection(currentSection + 1);
+          } else if (delta < 0 && currentSection > 0) {
+            // 向上滚动
+            goToSection(currentSection - 1);
+          }
+        }
+
+        // 处理键盘事件
+        function handleKeydown(e) {
+          if (isScrolling) return;
+          
+          switch(e.key) {
+            case 'ArrowDown':
+            case 'PageDown':
+              if (currentSection < sections.length - 1) {
+                goToSection(currentSection + 1);
+              }
+              break;
+            case 'ArrowUp':
+            case 'PageUp':
+              if (currentSection > 0) {
+                goToSection(currentSection - 1);
+              }
+              break;
+            case 'Home':
+              goToSection(0);
+              break;
+            case 'End':
+              goToSection(sections.length - 1);
+              break;
+          }
+        }
+
+        // 滚动到指定板块
+        function goToSection(index) {
+          isScrolling = true;
+          currentSection = index;
+          
+          // 平滑滚动到目标位置
+          sections[index].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          
+          // 更新导航高亮
+          updateNavHighlight();
+          
+          // 滚动完成后恢复
+          setTimeout(() => {
+            isScrolling = false;
+          }, 1000); // 滚动动画持续时间
+        }
+
+        // 更新导航高亮
+        function updateNavHighlight() {
+          document.querySelectorAll('.nav-link').forEach((link, i) => {
+            if (i === currentSection) {
+              link.classList.add('text-accent');
+            } else {
+              link.classList.remove('text-accent');
+            }
+          });
+        }
+
+        // 初始化滚动控制
+        // document.addEventListener('DOMContentLoaded', initScrollControl);
+
+        // 页面加载完成后隐藏加载动画
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('opacity-0');
+                setTimeout(function() {
+                    document.getElementById('loader').style.display = 'none';
+                }, 500);
+            }, 800);
+        });
+
+        // 滚动监听，实现元素渐入效果
+        const scrollAppearElements = document.querySelectorAll('.scroll-appear');
+        
+        function checkScroll() {
+            const triggerBottom = window.innerHeight * 0.85;
+            
+            scrollAppearElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                
+                if (elementTop < triggerBottom) {
+                    element.classList.add('appear');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); // 初始检查
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 回到顶部按钮
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 音频控制
+        const audioControl = document.getElementById('audio-control');
+        const bgMusic = document.getElementById('bg-music');
+        
+        audioControl.addEventListener('click', function() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                audioControl.classList.remove('fa-volume-off');
+                audioControl.classList.add('fa-volume-up');
+            } else {
+                bgMusic.pause();
+                audioControl.classList.remove('fa-volume-up');
+                audioControl.classList.add('fa-volume-off');
+            }
+        });
+
+        // 导航高亮
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        function highlightNav() {
+            const scrollY = window.pageYOffset;
+            
+            document.querySelectorAll('section').forEach(section => {
+                const sectionTop = section.offsetTop - 50;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('text-accent');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('text-accent');
+                        }
+                    });
+                }
+            });
+        }
+
+
+        
+        window.addEventListener('scroll', highlightNav);
+        highlightNav(); // 初始检查
+    </script>
+</body>
+</html>
+    
